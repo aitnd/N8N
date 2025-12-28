@@ -382,3 +382,162 @@ for line in result[0]:
 ---
 
 > 📝 **Ghi chú:** File này sẽ được cập nhật khi có thêm công cụ hoặc thay đổi trạng thái.
+
+---
+
+## 9. Face Swap & Video AI
+
+### Fal.AI (Face Swap API)
+
+| Thuộc tính | Giá trị |
+|------------|---------|
+| **Loại** | Cloud API |
+| **Website** | https://fal.ai |
+| **Models** | WAN 2.2-14B, Kling AI 2.6 Pro |
+| **Tính năng** | Face swap, motion control |
+| **Giá** | Trả phí (credits) |
+| **Trạng thái** | 📦 Có workflow mẫu |
+
+**API Endpoints:**
+- WAN 2.2: `https://queue.fal.run/fal-ai/wan/v2.2-14b/animate/replace`
+- Kling 2.6: `https://queue.fal.run/fal-ai/kling-video/v2.6/pro/motion-control`
+
+---
+
+### NanoAI API (Veo 3 + reCaptcha Bypass)
+
+| Thuộc tính | Giá trị |
+|------------|---------|
+| **Loại** | Cloud API |
+| **Website** | https://nanoai.pics |
+| **Tính năng** | Bypass reCaptcha cho Google Veo 3 |
+| **Giá** | ~50đ/video |
+| **Trạng thái** | 📦 Có workflow mẫu |
+
+---
+
+## 10. Social Media APIs
+
+### Facebook Graph API
+
+| Thuộc tính | Giá trị |
+|------------|---------|
+| **Loại** | Cloud API |
+| **Version** | v23.0 / v24.0 |
+| **Tính năng** | Post Feed, Photos, Videos, Reels, Carousel |
+| **Trạng thái** | 📦 Có workflow mẫu |
+
+**Endpoints sử dụng:**
+```
+{page_id}/feed     - Đăng status text
+{page_id}/photos   - Đăng ảnh
+{page_id}/videos   - Đăng video
+{page_id}/video_reels - Đăng Reels
+```
+
+**Workflow `Automation Facebook.json` hỗ trợ:**
+- ✅ Feed (status text)
+- ✅ Photos (ảnh đơn)
+- ✅ Videos (video thường)
+- ✅ Carousel (nhiều ảnh)
+- ✅ Reels (video ngắn)
+
+---
+
+## 11. UI Libraries (Tham khảo)
+
+### Semi Design (ByteDance)
+
+| Thuộc tính | Giá trị |
+|------------|---------|
+| **Loại** | React UI Library |
+| **Website** | https://semi.design |
+| **Components** | 70+ components |
+| **Framework** | React 16, 17, 18, 19 |
+| **Tính năng** | Theme customization, i18n (10+ ngôn ngữ), Accessibility |
+| **Figma Kit** | Có sẵn |
+| **Trạng thái** | ⏳ Tham khảo |
+
+**Cài đặt:**
+```bash
+npm install @douyinfe/semi-ui  # React < 19
+npm install @douyinfe/semi-ui-19  # React 19
+```
+
+**Ưu điểm:**
+- ✅ Design đẹp, hiện đại (ByteDance/Douyin style)
+- ✅ Dark mode built-in
+- ✅ Design-to-Code (Figma → Code)
+- ✅ Accessibility (W3C)
+- ✅ RTL support
+
+**Use case tiềm năng:**
+- Dashboard quản lý content
+- Control panel cho workflows
+- Analytics/Báo cáo
+
+---
+
+## 12. Upload & Storage Services
+
+### Cloudinary
+
+| Thuộc tính | Giá trị |
+|------------|---------|
+| **Loại** | Cloud API |
+| **Website** | https://cloudinary.com |
+| **Tính năng** | Upload, transform images/videos |
+| **Free tier** | 25 credits/tháng |
+| **Trạng thái** | 📦 Dùng trong Face Swap workflow |
+
+**Endpoints:**
+```
+https://api.cloudinary.com/v1_1/{cloud_name}/image/upload
+https://api.cloudinary.com/v1_1/{cloud_name}/video/upload
+```
+
+---
+
+## 📊 Tổng Hợp Trạng Thái Cập Nhật
+
+| Công cụ | Loại | Trạng thái | Ưu tiên |
+|---------|------|------------|---------|
+| n8n | Platform | ✅ Đã cài | - |
+| Google Gemini | AI/LLM | ⏳ Chưa cấu hình | 🔴 Cao |
+| Telegram Bot | Messaging | 📦 Có workflow | 🔴 Cao |
+| Google Sheets | Database | ⏳ Chưa tạo | 🔴 Cao |
+| Valtec-TTS | TTS | ⏳ Chưa cài | 🟡 Trung bình |
+| FFmpeg | Video | ⏳ Chưa cài | 🟡 Trung bình |
+| NanoAI API | Video Gen | 📦 Có workflow | 🟡 Trung bình |
+| Fal.AI | Face Swap | 📦 Có workflow | 🟡 Trung bình |
+| Facebook API | Social | 📦 Có workflow | 🟡 Trung bình |
+| RunPod | STT/TTS | 📦 Có workflow | 🟡 Trung bình |
+| OpenAI | LLM/Embeddings | 📦 Có workflow | 🟡 Trung bình |
+| Supabase | Vector DB | 📦 Có workflow | 🟡 Trung bình |
+| PostgreSQL | Database | 📦 Có workflow | 🟡 Trung bình |
+| ElevenLabs | TTS | 📦 Có workflow | 🟡 Trung bình |
+| YouTube API | Data/Search | 📦 Có workflow | 🟡 Trung bình |
+| DeepSeek | LLM | 📦 Có workflow | 🟢 Thấp |
+| Cloudinary | Storage | 📦 Có workflow | 🟢 Thấp |
+| Semi Design | UI Library | ⏳ Tham khảo | 🟢 Thấp |
+
+---
+
+## 📦 Danh Sách Workflow JSON (10 files)
+
+| # | File | Chức năng |
+|---|------|-----------|
+| 1 | `Lấy authorization Flow.json` | Lấy Google token |
+| 2 | `nanoai.pics pass captcha...json` | Text-to-Video Veo 3 |
+| 3 | `Video_Face_Swap_Workflow_Clean.json` | Face swap Fal.AI |
+| 4 | `Automation Facebook.json` | Auto post FB |
+| 5 | `ai-voice-agent-basic.json` | Voice Agent (RunPod) |
+| 6 | `comment_db_sanitized.json` | Comment RAG DB |
+| 7 | `chatbot facebook.json` | FB Messenger Bot |
+| 8 | `Voice Chat.json` | Voice Chat (ElevenLabs) |
+| 9 | `chatbot tele.json` | Telegram Bot + Memory |
+| 10 | `xu hướng YouTube.json` | YouTube Trends |
+
+---
+
+> **Cập nhật lần cuối:** 2025-12-29

@@ -13,6 +13,7 @@
 | 3 | **Hot Post Analyzer** | Phân tích bài hot → Viết bài tương tự/chuyên sâu |
 | 4 | **Virtual KOL** | Tạo influencer ảo với AI face |
 | 5 | **AI Video Gen (Veo 3)** | Text/Image → Video bằng Google Veo 3 |
+| 6 | **Video Face Swap** | Ghép mặt vào video với Fal.AI |
 
 ---
 
@@ -638,6 +639,128 @@ Workflow tự động hóa hoàn chỉnh với nhiều tính năng nâng cao:
 
 ---
 
+## 6️⃣ VIDEO FACE SWAP (Fal.AI)
+
+### Mô tả
+Ghép mặt từ ảnh vào video, hỗ trợ nhiều AI models (WAN 2.2, Kling AI 2.6)
+
+### 📦 Workflow có sẵn: `Video_Face_Swap_Workflow_Clean.json`
+
+### Công cụ sử dụng
+
+| Công cụ | Vai trò | Chi phí |
+|---------|---------|---------|
+| **Fal.AI** | AI Face Swap API | Trả phí (credits) |
+| **Cloudinary** | Upload Image/Video | Free tier |
+| **WAN 2.2-14B** | Face swap model | Via Fal.AI |
+| **Kling AI 2.6 Pro** | Motion control | Via Fal.AI |
+
+### Luồng xử lý
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      VIDEO FACE SWAP WORKFLOW                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[Form Trigger] - User upload ảnh + video
+        ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ UPLOAD TO CLOUDINARY (Song song)                                            │
+│ ├── Image → Cloudinary → secure_url                                        │
+│ └── Video → Cloudinary → secure_url                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+        ↓
+[Merge] - Gộp 2 URLs
+        ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ FACE SWAP (Chạy song song 2 models)                                         │
+│                                                                             │
+│ ┌─────────────────────────────┐    ┌─────────────────────────────┐         │
+│ │ 🟡 WAN 2.2-14B              │    │ 🟢 KLING AI 2.6 PRO         │         │
+│ │ fal-ai/wan/v2.2-14b/animate │    │ fal-ai/kling-video/v2.6/pro │         │
+│ │                             │    │ /motion-control             │         │
+│ │ Parameters:                 │    │                             │         │
+│ │ • resolution: 720p          │    │ Parameters:                 │         │
+│ │ • use_turbo: true           │    │ • character_orientation:    │         │
+│ │ • video_quality: high       │    │   video                     │         │
+│ └─────────────────────────────┘    └─────────────────────────────┘         │
+└─────────────────────────────────────────────────────────────────────────────┘
+        ↓
+[Wait] - Chờ xử lý
+        ↓
+[Check Status] - Polling request_id/status
+        ↓
+[If COMPLETED] 
+  ├── Yes → [Get Video] - Lấy video hoàn thành
+  └── No  → [Wait] → Loop lại
+```
+
+### API Endpoints Fal.AI
+
+| Model | Endpoint |
+|-------|----------|
+| **WAN 2.2 Animate** | `https://queue.fal.run/fal-ai/wan/v2.2-14b/animate/replace` |
+| **Kling 2.6 Motion** | `https://queue.fal.run/fal-ai/kling-video/v2.6/pro/motion-control` |
+| **Check Status** | `https://queue.fal.run/{model}/requests/{request_id}/status` |
+| **Get Result** | `https://queue.fal.run/{model}/requests/{request_id}` |
+
+### Cấu hình cần thiết
+
+1. **Cloudinary Account:**
+   - Tạo tài khoản tại: https://cloudinary.com
+   - Lấy `CLOUD_NAME` và `UPLOAD_PRESET`
+   - Thay vào workflow: `YOUR_CLOUD_NAME`, `YOUR_UPLOAD_PRESET`
+
+2. **Fal.AI API Key:**
+   - Đăng ký tại: https://fal.ai
+   - Tạo API Key
+   - Cấu hình HTTP Header Auth trong n8n với name: `Fal.AI`
+
+### So sánh 2 Models
+
+| Tiêu chí | WAN 2.2-14B | Kling AI 2.6 Pro |
+|----------|-------------|------------------|
+| **Chất lượng** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| **Tốc độ** | Nhanh (turbo) | Trung bình |
+| **Motion control** | Cơ bản | Nâng cao |
+| **Chi phí** | Thấp hơn | Cao hơn |
+| **Use case** | Video đơn giản | Video chuyên nghiệp |
+
+### Ví dụ sử dụng
+
+```
+👤: [Upload ảnh khuôn mặt + video nhảy]
+
+🤖: 🎭 Đang xử lý Face Swap...
+    ⏳ WAN 2.2: Đang render...
+    ⏳ Kling 2.6: Đang render...
+    
+    ... (2-5 phút) ...
+    
+    ✅ Hoàn thành!
+    
+    📹 WAN 2.2 Result: [link]
+    📹 Kling 2.6 Result: [link]
+    
+    Chất lượng nào phù hợp hơn?
+```
+
+### Tích hợp với Virtual KOL
+
+Workflow này là thành phần quan trọng cho **Virtual KOL**:
+
+```
+[AI Generated Face] + [Video Library]
+            ↓
+[Video Face Swap Workflow]
+            ↓
+[KOL Video với mặt AI]
+            ↓
+[Auto Post]
+```
+
+---
+
 ## 📊 Tổng Hợp Công Cụ Mới Cần Thêm
 
 | Công cụ | Vai trò | Loại | Ưu tiên |
@@ -645,8 +768,10 @@ Workflow tự động hóa hoàn chỉnh với nhiều tính năng nâng cao:
 | **yt-dlp** | Download video | Local | 🔴 Cao |
 | **Whisper** | Transcribe audio | Local/API | 🔴 Cao |
 | **NanoAI API** | Bypass reCaptcha + Veo 3 | API | 🔴 Cao |
+| **Fal.AI** | Face Swap (WAN, Kling) | API | 🔴 Cao |
+| **Cloudinary** | Upload Image/Video | API | 🟡 Trung bình |
 | **Firecrawl** | Scrape web | API | 🟡 Trung bình |
-| **HeyGen/D-ID** | Face swap | API | 🟡 Trung bình |
+| **HeyGen/D-ID** | Face swap (alternative) | API | 🟡 Trung bình |
 | **DeepFaceLive** | Face swap local | Local | 🟢 Thấp |
 | **Serper API** | Search trends | API | 🟢 Thấp |
 
@@ -666,3 +791,138 @@ Workflow tự động hóa hoàn chỉnh với nhiều tính năng nâng cao:
 > - Không copy nguyên văn nội dung
 > - Luôn thêm giá trị mới, góc nhìn riêng
 > - Cân nhắc về copyright khi dùng hình ảnh gốc
+
+---
+
+## 📦 WORKFLOW JSON CÓ SẴN
+
+Dự án có **7 workflow JSON** sẵn sàng import vào n8n:
+
+### 1️⃣ `Lấy authorization Flow.json`
+- **Chức năng:** Lấy Google Authorization token cho Veo 3
+- **Công cụ:** Webhook, Google Sheets
+
+### 2️⃣ `nanoai.pics pass captcha text to video 3.1.json`
+- **Chức năng:** Tạo video với Google Veo 3, bypass reCaptcha
+- **Công cụ:** NanoAI API, HTTP Request
+- **Chi phí:** ~50đ/video
+
+### 3️⃣ `Video_Face_Swap_Workflow_Clean.json`
+- **Chức năng:** Ghép mặt từ ảnh vào video
+- **Công cụ:** Fal.AI (WAN 2.2, Kling AI 2.6), Cloudinary
+- **Models:** WAN 2.2-14B, Kling AI 2.6 Pro
+
+### 4️⃣ `Automation Facebook.json`
+- **Chức năng:** Tự động đăng bài lên Facebook Page
+- **Hỗ trợ:** Feed, Photos, Videos, Carousel, Reels
+- **Công cụ:** Facebook Graph API v23.0/v24.0
+
+### 5️⃣ `ai-voice-agent-basic.json`
+- **Chức năng:** AI Voice Agent - Trả lời khách hàng bằng giọng nói
+- **Luồng:**
+```
+[Voice Input] → [STT (RunPod)] → [Sentiment Analysis] 
+→ [AI Agent] → [TTS (RunPod)] → [Send Audio to FB]
+```
+- **Tính năng:**
+  - Speech-to-Text (Whisper trên RunPod)
+  - Phân tích cảm xúc khách hàng
+  - AI trả lời (GPT/Gemini)
+  - Text-to-Speech (TTS tiếng Việt)
+  - Gửi audio về Facebook Messenger
+- **Công cụ:** RunPod Serverless, LangChain, Facebook API
+
+### 6️⃣ `comment_db_sanitized.json`
+- **Chức năng:** RAG Database cho Comment - Học từ lịch sử phản hồi
+- **Luồng:**
+```
+[Schedule Trigger] → [Google Sheets] → [Process Data]
+→ [OpenAI Embeddings] → [Supabase Vector Store]
+```
+- **Tính năng:**
+  - Import comment history từ Google Sheets
+  - Tạo embeddings với OpenAI
+  - Lưu vào Supabase Vector Store
+  - AI Agent query để tìm câu trả lời tương tự
+- **Công cụ:** Google Sheets, OpenAI, Supabase, PostgreSQL
+
+### 7️⃣ `chatbot facebook.json`
+- **Chức năng:** Chatbot Facebook Messenger đầy đủ tính năng
+- **Luồng:**
+```
+[Webhook] → [Verify Token] → [Check Message Type]
+  ├── Text → [AI Agent] → [Clean Text] → [Send Reply]
+  ├── Image → [Process Image] → [AI Analysis] → [Reply]
+  └── Attachment → [Handle] → [Reply]
+```
+- **Tính năng:**
+  - Webhook verify cho Facebook
+  - Xử lý tin nhắn text
+  - Xử lý hình ảnh (với AI Vision)
+  - Xử lý các attachment khác
+  - AI Agent với memory (PostgreSQL)
+  - Lưu message buffer vào PostgreSQL
+  - Sử dụng tool RAG để tra cứu scenarios
+- **Công cụ:** Facebook Messenger API, OpenAI GPT-4o-mini, PostgreSQL, LangChain
+
+### 8️⃣ `Voice Chat.json`
+- **Chức năng:** Voice Chat với AI - Gửi audio, nhận audio
+- **Luồng:**
+```
+[Webhook] → [OpenAI STT] → [Get Context] → [LLM Chain] 
+→ [Insert Chat] → [ElevenLabs TTS] → [Respond Audio]
+```
+- **Tính năng:**
+  - Speech-to-Text (OpenAI Whisper)
+  - LLM với context memory (Gemini 1.5 Flash)
+  - Window Buffer Memory
+  - Text-to-Speech (ElevenLabs)
+  - Trả về audio binary
+- **Công cụ:** OpenAI, Google Gemini, ElevenLabs
+
+### 9️⃣ `chatbot tele.json`
+- **Chức năng:** Chatbot Telegram với Long-term Memory
+- **Luồng:**
+```
+[Telegram Trigger] → [Retrieve Memories & Notes (Google Docs)]
+→ [AI Agent] → [Save Memory/Notes] → [Telegram Response]
+```
+- **Tính năng:**
+  - Long-term Memory lưu Google Docs
+  - Notes storage riêng biệt
+  - Window Buffer Memory (50 tin nhắn)
+  - Hỗ trợ GPT-4o-mini và DeepSeek-V3
+  - Tự động nhận diện thông tin cần lưu
+- **Công cụ:** Telegram API, OpenAI/DeepSeek, Google Docs
+
+### � `xu hướng YouTube.json`
+- **Chức năng:** Tìm xu hướng YouTube theo niche
+- **Luồng:**
+```
+[Chat Trigger] → [AI Agent] → [YouTube Search Tool] 
+→ [Get Video Stats] → [Analyze Patterns] → [Report]
+```
+- **Tính năng:**
+  - Tìm video trending 2 ngày gần nhất
+  - Lọc video > 3 phút 30 giây
+  - Phân tích: views, likes, comments, tags
+  - Tìm patterns trong content
+  - Gợi ý content ideas
+- **Công cụ:** YouTube Data API, OpenAI
+
+---
+
+## �📊 Tổng Kết Workflows (10 files)
+
+| # | Workflow | Chức năng | API chính |
+|---|----------|-----------|-----------|
+| 1 | Authorization | Lấy Google token | Google, Sheets |
+| 2 | Veo 3 | Text-to-Video | NanoAI, Google |
+| 3 | Face Swap | Ghép mặt vào video | Fal.AI, Cloudinary |
+| 4 | FB Automation | Auto post FB | Facebook Graph |
+| 5 | Voice Agent | Trả lời bằng giọng (RunPod) | RunPod, FB |
+| 6 | Comment DB | RAG từ comments | OpenAI, Supabase |
+| 7 | FB Chatbot | Bot Messenger | OpenAI, PostgreSQL |
+| 8 | Voice Chat | Gửi/nhận audio | OpenAI, ElevenLabs |
+| 9 | Tele Chatbot | Bot Telegram + Memory | Telegram, Docs |
+| 10 | YouTube Trends | Tìm xu hướng | YouTube API |

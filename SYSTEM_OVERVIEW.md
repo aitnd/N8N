@@ -56,9 +56,10 @@ Xây dựng **"Quản lý Kênh AI"** - một trợ lý thông minh qua Telegram
 | 1 | **Video Processing** | Cắt, ghép, convert video | FFmpeg |
 | 2 | **Video Remake** | Transcribe → Viết lại → Output mới | Whisper, Gemini |
 | 3 | **Hot Post Analyzer** | Phân tích viral → Viết bài hay hơn | Firecrawl, Gemini |
-| 4 | **Virtual KOL** | Influencer ảo với AI face | HeyGen/DeepFaceLive |
+| 4 | **Virtual KOL** | Influencer ảo với AI face | Fal.AI, HeyGen |
 | 5 | **AI Video Gen** | Text/Image → Video | Google Veo 3 + NanoAI |
 | 6 | **Tóm tắt tài liệu** | Upload file → AI đọc & tóm tắt | Gemini Vision |
+| 7 | **Video Face Swap** | Ghép mặt vào video | Fal.AI (WAN, Kling) |
 
 ### Chi tiết chức năng nâng cao:
 
@@ -121,6 +122,7 @@ AUTO_VEO3 Workflow (162K+ stars):
 
 | Công cụ | Loại | Chi phí | Chất lượng |
 |---------|------|---------|------------|
+| **Fal.AI** ⭐ | Cloud | Credits | ⭐⭐⭐⭐⭐ |
 | **HeyGen** | Cloud | $$$ | ⭐⭐⭐⭐⭐ |
 | **D-ID** | Cloud | $$ | ⭐⭐⭐⭐ |
 | **DeepFaceLive** | Local | Miễn phí | ⭐⭐⭐⭐ |
@@ -282,22 +284,18 @@ AUTO_VEO3 Workflow (162K+ stars):
 ## 📁 CẤU TRÚC THƯ MỤC DỰ ÁN
 
 ```
-e:\N8N Super Assistant\
+e:\N8N\
 ├── 📄 TOOLS_INVENTORY.md        # Danh sách công cụ
 ├── 📄 FEATURES_AND_WORKFLOW.md  # Chức năng cơ bản
 ├── 📄 ADVANCED_FEATURES.md      # Chức năng nâng cao
 ├── 📄 SYSTEM_OVERVIEW.md        # File này - Tổng hợp
-├── 📁 workflows/                # JSON workflows cho n8n
-│   ├── 0.WF-Bot-Assistant.json
-│   ├── 4.WF-PLANNED.json
-│   ├── 5.WF-RENDER.json
-│   └── 6.WF-VEO3.json
-├── 📁 docs/                     # Tài liệu hướng dẫn
-└── 📁 images/                   # Hình ảnh workflow
+├── 📦 Lấy authorization Flow.json
+├── 📦 nanoai.pics pass captcha text to video 3.1.json
+└── 📦 Video_Face_Swap_Workflow_Clean.json
 ```
 
 ---
 
 > 📝 **Ghi chú:** Tài liệu này sẽ được cập nhật khi có thêm tính năng hoặc thay đổi.
 > 
-> **Cập nhật lần cuối:** 2025-12-28
+> **Cập nhật lần cuối:** 2025-12-29
